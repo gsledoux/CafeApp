@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/script.js" defer></script>
+    <script src="js/dados.js" defer></script>
+
+    <title>Login - CafeApp</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="phone">
+            <div class="login-form">
+                <h1 class="cafe-app-title">CafeApp</h1>
+                <div class="form-group">
+                    <label for="email">Usuário/E-mail:</label>
+                    <input type="text" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                        <span class="toggle-password" onclick="togglePasswordVisibility()">Ver</span>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="button" onclick="login()">Acessar</button>
+                    <button class="button" onclick="register()">Cadastrar-se</button>
+                </div>
+                <button class="back-button" onclick="goBack()">Voltar</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

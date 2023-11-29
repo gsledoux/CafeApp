@@ -1,0 +1,320 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+
+:root {
+    --main-color-dark: #3b271e;
+    --main-color-medium: #a05e2a;
+    --main-color-light: #ae7349;
+    --main-color-bright: #c8934f;
+    --background-color: #ffffff;
+    --linear-gradient: linear-gradient(186deg, #421E1E 4.41%, rgba(109, 73, 52, 0.71) 97.33%);
+    --text-color: #efdfbb;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #000000;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.phone {
+    position: relative;
+    width: 390px;
+    height: 950px;
+    background: var(--linear-gradient);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle {
+    position: relative;
+    width: 80%;
+    height: 35%;
+    margin-top: 25%;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle img {
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.text {
+    text-align: center;
+    color: var(--text-color);
+    margin-top: 50px;
+}
+
+.cafe-app,
+.cafe-app-title {
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2em;
+    font-weight: bolder;
+    margin-top: 20px;
+}
+
+
+
+.button {
+    width: 60%;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--main-color-dark);
+    background-color: var(--background-color);
+    border-radius: 50px;
+    border: none;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    font-weight: bolder;
+    text-align-last: center;
+}
+
+
+.back-button {
+    width: 100%;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--main-color-dark);
+    background-color: var(--background-color);
+    border-radius: 50px;
+    border: none;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.button:hover,
+.back-button:hover {
+    color: var(--main-color-dark);
+    background-color: var(--main-color-bright);
+}
+
+.container .phone-form {
+    text-align: center;
+    width: 90%;
+    margin-top: 25%;
+}
+.container .login-form {
+    text-align: left;
+    width: 80%;
+    margin-top: 25%;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+.login-form .info-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--background-color);
+    font-weight: bolder;
+    text-align: center;
+}
+.login-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-weight: normal;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+}
+
+.login-form .password-input {
+    position: relative;
+}
+
+.login-form .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.login-form .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.login-form .button {
+    width: 45%;
+    font-weight: bolder;
+}
+
+.login-form .back-button-form {
+    width: 45%;
+    font-weight: bolder;
+
+}
+
+.login-form .back-button-form {
+    width: 45%;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--main-color-dark);
+    background-color: var(--background-color);
+    border-radius: 50px;
+    border: none;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.login-form .back-button-form:hover {
+    color: var(--main-color-dark);
+    background-color: var(--main-color-bright);
+}
+
+.scrollable-section {
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.scrollable-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable-section::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+.inline-form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group-half {
+    width: 48%;
+}
+
+.form-group-three-quarters {
+    width: 75%;
+}
+
+.form-group-quarter {
+    width: 23%;
+}
+
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+.store-form .info-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--background-color);
+    font-weight: bolder;
+    text-align: center;
+}
+.store-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-weight: normal;
+}
+.items {
+    display: flex;
+    justify-content: space-between;
+    padding: 23px 17px;
+    align-items: center; /* Centraliza verticalmente */
+    margin: 0 auto; /* Centraliza horizontalmente */
+}
+
+.item-store {
+    width: 40%;
+    height: 40%;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-store img {
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.infos {
+    width: 50%; /* Ajuste para garantir que a largura seja 50% */
+}
+.items-label {
+    font-size: larger;
+    font-weight: bolder;
+    font-style: italic;
+    font-family: 'Poppins', sans-serif;
+}
+
+.store-form {
+    margin-bottom: 17px;
+}
+
+.store-form label,
+.store-form span {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--background-color);
+    font-weight: lighter;
+}
+
+.store-form input {
+    width: 30%;
+    height: 5%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+}
+
+.button,
+.back-button {
+    width: 45%;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--main-color-dark);
+    background-color: var(--background-color);
+    border-radius: 50px;
+    border: none;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    margin-left: 15px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.button:hover,
+.back-button:hover {
+    color: var(--main-color-dark);
+    background-color: var(--main-color-bright);
+}
