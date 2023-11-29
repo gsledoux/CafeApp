@@ -20,6 +20,10 @@ const products = [
 
 function renderProducts() {
     const storeSection = document.getElementById('store-section');
+    if (!storeSection) {
+        console.error('Elemento store-section não encontrado no HTML.');
+        return;
+    }
 
     products.forEach(product => {
         const itemDiv = document.createElement('div');
@@ -102,7 +106,6 @@ function updateTotal(productId, productPrice, totalId) {
     totalSpan.textContent = `R$ ${total.toFixed(2)}`;
 }
 
-// Chamada para renderizar os produtos ao carregar a página
 window.addEventListener('load', function () {
     renderProducts();
 });
@@ -137,9 +140,8 @@ function login() {
     const user = usuarios.find((usuario) => usuario.email === emailInput && usuario.senha === passwordInput);
 
     if (user) {
-        alert('Login bem-sucedido!');
         user_logado = true;
-        localStorage.setItem('user_logado', JSON.stringify(user_logado));
+        localStorage.setItem('user_logado', JSON.stringify(user));
         window.location.href = 'store.html';
     } else {
         alert('Usuário/E-mail ou senha incorretos. Tente novamente.');
@@ -155,6 +157,7 @@ function logout() {
 function goBack() {
     window.location.href = 'login.html';
 }
+
 function voltarAoStore() {
     window.location.href = 'store.html';
 }
@@ -170,6 +173,27 @@ window.addEventListener('beforeunload', function () {
 
 window.addEventListener('load', function () {
     usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    if (usuarios.length === 0) {
+        const usuarioPadrao = new UserData(
+            "admin@example.com",
+            "adminpassword",
+            {
+                nomeCompleto: "Admin",
+                rua: "Rua Admin",
+                numero: "1",
+                complemento: "Admin",
+                bairro: "Admin",
+                cidade: "Admin City",
+                uf: "SP",
+                cep: "12345-678",
+            },
+            "(99) 9999-9999"
+        );
+
+        usuarios.push(usuarioPadrao);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    }
 });
 
 function saveUserData(usuario) {
@@ -251,14 +275,20 @@ function buyItems() {
     window.location.href = 'pedido.html';
 }
 
-function generateReceipt(user) {
-    // Implemente a lógica para obter os itens comprados do localStorage
-    const items = JSON.parse(localStorage.getItem('itemsComprados')) || [];
+function getCurrentUser() {
+    const user = JSON.parse(localStorage.getItem('user_logado'));
+    return usuarios.find(usuario => usuario.email === user.email);
+}
 
-    // Calcular o total geral
+function generateReceipt(user) {
+    if (!user) {
+        alert('Usuário não está logado. Faça login antes de realizar uma compra.');
+        return;
+    }
+
+    const items = JSON.parse(localStorage.getItem('itemsComprados')) || [];
     const totalGeral = items.reduce((total, item) => total + (item.quantity * item.price), 0);
 
-    // Gerar a mensagem de recibo
     const receiptMessage = `
     Pedido Efetuado com sucesso
 
@@ -287,18 +317,12 @@ function generateReceipt(user) {
 
 function printOrder() {
     const pedidoSection = document.getElementById('pedido-section');
-
-    // Obtém o usuário logado (assumindo que você já tem essa informação)
     const user = getCurrentUser();
-
-    // Gera o recibo
     const receiptMessage = generateReceipt(user);
 
-    // Cria um elemento para exibir o recibo
     const receiptDiv = document.createElement('div');
     receiptDiv.innerHTML = `<pre>${receiptMessage}</pre>`;
 
-    // Adiciona o recibo à seção de pedido
     pedidoSection.innerHTML = '';
     pedidoSection.appendChild(receiptDiv);
 }
