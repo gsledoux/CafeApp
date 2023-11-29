@@ -1,6 +1,112 @@
 let user_logado = JSON.parse(localStorage.getItem('user_logado')) || false;
 let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
+class Product {
+    constructor(id, name, image, price) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.quantity = 0;
+    }
+}
+
+const products = [
+    new Product('cafeLeite', 'Café com Leite', 'images/cafeleite.png', 5.00),
+    new Product('expresso', 'Expresso', 'images/expresso.png', 3.50),
+    new Product('mocha', 'Mocha', 'images/mocha.png', 4.00),
+    new Product('cha', 'Chá', 'images/cha.png', 2.50),
+];
+
+function renderProducts() {
+    const storeSection = document.getElementById('store-section');
+
+    products.forEach(product => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('items');
+
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('item-store');
+        productDiv.id = product.id;
+        productDiv.innerHTML = `<img src="${product.image}" alt="${product.name}">`;
+
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('infos');
+
+        const infoStoreDiv = document.createElement('div');
+        infoStoreDiv.classList.add('info-store');
+
+        const nameLabel = document.createElement('label');
+        nameLabel.classList.add('items-label');
+        nameLabel.htmlFor = product.id;
+        nameLabel.textContent = product.name;
+
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.id = `quantity${product.id}`;
+        quantityInput.name = `quantity${product.id}`;
+        quantityInput.value = 0;
+        quantityInput.min = 0;
+        quantityInput.addEventListener('change', () => updateTotal(product.id, product.price, `total${product.id}`));
+
+        const priceLabel = document.createElement('label');
+        priceLabel.htmlFor = `preco${product.id}`;
+        priceLabel.textContent = 'Preço:';
+
+        const priceSpan = document.createElement('span');
+        priceSpan.id = `preco${product.id}`;
+        priceSpan.textContent = `R$ ${product.price.toFixed(2)}`;
+
+        const totalLabel = document.createElement('label');
+        totalLabel.htmlFor = `total${product.id}`;
+        totalLabel.textContent = 'Total:';
+
+        const totalSpan = document.createElement('span');
+        totalSpan.id = `total${product.id}`;
+        totalSpan.textContent = 'R$ 0,00';
+
+        infoStoreDiv.appendChild(nameLabel);
+        infoStoreDiv.appendChild(createInlineForm('Quantidade:', quantityInput));
+        infoStoreDiv.appendChild(createInlineForm('Preço:', priceSpan));
+        infoStoreDiv.appendChild(createInlineForm('Total:', totalSpan));
+
+        infoDiv.appendChild(infoStoreDiv);
+
+        itemDiv.appendChild(productDiv);
+        itemDiv.appendChild(infoDiv);
+
+        storeSection.appendChild(itemDiv);
+    });
+}
+
+function createInlineForm(labelText, element) {
+    const inlineFormDiv = document.createElement('div');
+    inlineFormDiv.classList.add('inline-form');
+
+    const label = document.createElement('label');
+    label.textContent = labelText;
+
+    inlineFormDiv.appendChild(label);
+    inlineFormDiv.appendChild(element);
+
+    return inlineFormDiv;
+}
+
+function updateTotal(productId, productPrice, totalId) {
+    const quantityInput = document.getElementById(`quantity${productId}`);
+    const totalSpan = document.getElementById(totalId);
+
+    const quantity = parseInt(quantityInput.value);
+    const total = quantity * productPrice;
+
+    totalSpan.textContent = `R$ ${total.toFixed(2)}`;
+}
+
+// Chamada para renderizar os produtos ao carregar a página
+window.addEventListener('load', function () {
+    renderProducts();
+});
+
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById('password');
     const toggleButton = document.querySelector('.toggle-password');
@@ -43,14 +149,13 @@ function login() {
 function logout() {
     user_logado = false;
     localStorage.removeItem('user_logado');
-    window.location.href = 'logout.html';
-}
-
-function goBack() {
     window.location.href = 'index.html';
 }
 
-function backToMenu() {
+function goBack() {
+    window.location.href = 'login.html';
+}
+function voltarAoStore() {
     window.location.href = 'store.html';
 }
 
@@ -102,7 +207,7 @@ function saveData() {
     });
 
     alert('Cadastro realizado com sucesso!');
-    window.location.href = 'cadastro.html';
+    window.location.href = 'login.html';
 }
 
 function validateForm() {
@@ -131,11 +236,71 @@ function loadPage(page) {
 }
 
 function buyItems() {
+    const items = products.map(product => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: parseInt(document.getElementById(`quantity${product.id}`).value) || 0,
+    })).filter(item => item.quantity > 0);
+
+    if (items.length === 0) {
+        alert('Seu carrinho está vazio. Adicione itens antes de comprar.');
+        return;
+    }
+    localStorage.setItem('itemsComprados', JSON.stringify(items));
     window.location.href = 'pedido.html';
 }
 
+function generateReceipt(user) {
+    // Implemente a lógica para obter os itens comprados do localStorage
+    const items = JSON.parse(localStorage.getItem('itemsComprados')) || [];
+
+    // Calcular o total geral
+    const totalGeral = items.reduce((total, item) => total + (item.quantity * item.price), 0);
+
+    // Gerar a mensagem de recibo
+    const receiptMessage = `
+    Pedido Efetuado com sucesso
+
+    ------------------------------------------------
+    Item            Qtd         Valor       Total
+    ------------------------------------------------
+    ${items.map(item => `${item.name.padEnd(15)}${item.quantity.toString().padEnd(12)}R$ ${item.price.toFixed(2).toString().padEnd(12)}R$ ${(item.quantity * item.price).toFixed(2)}`).join('\n')}
+    ------------------------------------------------
+    Total Geral:                           R$ ${totalGeral.toFixed(2)}
+    ------------------------------------------------
+    Informações
+    ------------------------------------------------
+    Nome: "${user.endereco.nomeCompleto}"
+    Fone: "${user.telefone}"
+    ------------------------------------------------
+    Endereço
+    rua: "${user.endereco.rua}"
+    numero: "${user.endereco.numero}"               complemento: "${user.endereco.complemento}"
+    bairro: "${user.endereco.bairro}"
+    Cidade: "${user.endereco.cidade}"    UF: "${user.endereco.uf}"     CEP: "${user.endereco.cep}"
+    Muito Obrigado!
+    `;
+
+    return receiptMessage;
+}
+
 function printOrder() {
-    window.print();
+    const pedidoSection = document.getElementById('pedido-section');
+
+    // Obtém o usuário logado (assumindo que você já tem essa informação)
+    const user = getCurrentUser();
+
+    // Gera o recibo
+    const receiptMessage = generateReceipt(user);
+
+    // Cria um elemento para exibir o recibo
+    const receiptDiv = document.createElement('div');
+    receiptDiv.innerHTML = `<pre>${receiptMessage}</pre>`;
+
+    // Adiciona o recibo à seção de pedido
+    pedidoSection.innerHTML = '';
+    pedidoSection.appendChild(receiptDiv);
 }
 
 class UserData {
@@ -163,7 +328,7 @@ const usuario1 = new UserData(
     "(99) 9999-9999"
 );
 
-const usuarios = [usuario1];
+usuarios = [usuario1];
 
 usuarios.forEach(usuario => {
     console.log("Email:", usuario.email);
