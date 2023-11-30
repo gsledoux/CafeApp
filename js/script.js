@@ -140,13 +140,15 @@ function login() {
     const user = usuarios.find((usuario) => usuario.email === emailInput && usuario.senha === passwordInput);
 
     if (user) {
+        alert('Login bem-sucedido!');
         user_logado = true;
-        localStorage.setItem('user_logado', JSON.stringify(user));
+        localStorage.setItem('user_logado', JSON.stringify({ email: user.email }));
         window.location.href = 'store.html';
     } else {
-        alert('Usuário/E-mail ou senha incorretos. Tente novamente.');
+        loginDefaultUser();
     }
 }
+
 
 function logout() {
     user_logado = false;
@@ -175,23 +177,7 @@ window.addEventListener('load', function () {
     usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
     if (usuarios.length === 0) {
-        const usuarioPadrao = new UserData(
-            "admin@example.com",
-            "adminpassword",
-            {
-                nomeCompleto: "Admin",
-                rua: "Rua Admin",
-                numero: "1",
-                complemento: "Admin",
-                bairro: "Admin",
-                cidade: "Admin City",
-                uf: "SP",
-                cep: "12345-678",
-            },
-            "(99) 9999-9999"
-        );
-
-        usuarios.push(usuarioPadrao);
+        usuarios.push(admin, cliente);
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
     }
 });
@@ -271,62 +257,81 @@ function buyItems() {
         alert('Seu carrinho está vazio. Adicione itens antes de comprar.');
         return;
     }
+
+    const user = admin;
+    
     localStorage.setItem('itemsComprados', JSON.stringify(items));
+    localStorage.setItem('usuarioCompra', JSON.stringify(user));
     window.location.href = 'pedido.html';
+    printOrder();
+
 }
 
 function getCurrentUser() {
-    const user = JSON.parse(localStorage.getItem('user_logado'));
-    return usuarios.find(usuario => usuario.email === user.email);
+    const user = admin;
+    return user ? usuarios.find(usuario => usuario.email === user.email) : null;
 }
 
 function generateReceipt(user) {
-    if (!user) {
-        alert('Usuário não está logado. Faça login antes de realizar uma compra.');
-        return;
-    }
-
     const items = JSON.parse(localStorage.getItem('itemsComprados')) || [];
     const totalGeral = items.reduce((total, item) => total + (item.quantity * item.price), 0);
 
-    const receiptMessage = `
-    Pedido Efetuado com sucesso
+    const receiptContainer = document.createElement('div');
+    receiptContainer.classList.add('receipt-container');
 
-    ------------------------------------------------
-    Item            Qtd         Valor       Total
-    ------------------------------------------------
-    ${items.map(item => `${item.name.padEnd(15)}${item.quantity.toString().padEnd(12)}R$ ${item.price.toFixed(2).toString().padEnd(12)}R$ ${(item.quantity * item.price).toFixed(2)}`).join('\n')}
-    ------------------------------------------------
-    Total Geral:                           R$ ${totalGeral.toFixed(2)}
-    ------------------------------------------------
-    Informações
-    ------------------------------------------------
-    Nome: "${user.endereco.nomeCompleto}"
-    Fone: "${user.telefone}"
-    ------------------------------------------------
-    Endereço
-    rua: "${user.endereco.rua}"
-    numero: "${user.endereco.numero}"               complemento: "${user.endereco.complemento}"
-    bairro: "${user.endereco.bairro}"
-    Cidade: "${user.endereco.cidade}"    UF: "${user.endereco.uf}"     CEP: "${user.endereco.cep}"
-    Muito Obrigado!
-    `;
+    const header = document.createElement('h3');
+    header.textContent = 'Pedido Efetuado com sucesso';
+    receiptContainer.appendChild(header);
 
-    return receiptMessage;
+    const itemList = document.createElement('ul');
+    itemList.classList.add('item-list');
+
+    items.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+        <span class="item-name">${item.name}</span><br> 
+        <span class="item-inf"> Qtd: ${item.quantity} &nbsp &nbsp; &nbsp &nbsp; &nbsp &nbsp; Preço: &nbsp R$ ${item.price.toFixed(2)}</span><br> 
+        <span class="item-inf"> Total por item: &nbsp &nbsp &nbsp &nbsp &nbsp; R$ ${(item.quantity * item.price).toFixed(2)}</span><br> `;
+        itemList.appendChild(listItem);
+    });
+
+    receiptContainer.appendChild(itemList);
+
+    const totalLabel = document.createElement('div');
+    totalLabel.classList.add('total');
+    totalLabel.textContent = `Total Geral: R$ ${totalGeral.toFixed(2)}`;
+    receiptContainer.appendChild(totalLabel);
+
+    const userInfo = document.createElement('div');
+    userInfo.classList.add('user-info');
+    userInfo.innerHTML = `Nome: ${user.endereco.nomeCompleto}<br>Fone: ${user.telefone}`;
+    receiptContainer.appendChild(userInfo);
+
+    const addressInfo = document.createElement('div');
+    addressInfo.classList.add('address-info');
+    addressInfo.innerHTML = `Rua: ${user.endereco.rua} &nbsp &nbsp; Número: ${user.endereco.numero} <br> Complemento: ${user.endereco.complemento}<br>Bairro: ${user.endereco.bairro}<br>Cidade: ${user.endereco.cidade} &nbsp &nbsp; UF: ${user.endereco.uf} 
+    <br>CEP: ${user.endereco.cep}`;
+    receiptContainer.appendChild(addressInfo);
+
+    const thankYou = document.createElement('div');
+    thankYou.classList.add('thank-you');
+    thankYou.textContent = 'Muito Obrigado!';
+    receiptContainer.appendChild(thankYou);
+
+    return receiptContainer;
 }
 
 function printOrder() {
     const pedidoSection = document.getElementById('pedido-section');
-    const user = getCurrentUser();
-    const receiptMessage = generateReceipt(user);
-
-    const receiptDiv = document.createElement('div');
-    receiptDiv.innerHTML = `<pre>${receiptMessage}</pre>`;
+    const user = admin;
+    const receiptContainer = generateReceipt(user);
 
     pedidoSection.innerHTML = '';
-    pedidoSection.appendChild(receiptDiv);
+    pedidoSection.appendChild(receiptContainer);
 }
-
+function printReceipt() {
+    print();
+}
 class UserData {
     constructor(email, senha, endereco, telefone) {
         this.email = email;
@@ -336,29 +341,47 @@ class UserData {
     }
 }
 
-const usuario1 = new UserData(
-    "usuario1@example.com",
-    "senha1",
+const cliente = new UserData(
+    "cliente@example.com",
+    "senhacliente",
     {
-        nomeCompleto: "Fulano de Tal",
-        rua: "Rua Principal",
+        nomeCompleto: "Cliente",
+        rua: "Rua do Cliente",
         numero: "123",
-        complemento: "Apto 1",
-        bairro: "Centro",
-        cidade: "Cidade",
+        complemento: "Apto 2",
+        bairro: "Bairro do Cliente",
+        cidade: "Cidade do Cliente",
+        uf: "RJ",
+        cep: "98765-432",
+    },
+    "(88) 8888-8888"
+);
+
+const admin = {
+    email: "admin@example.com",
+    senha: "admin",
+    endereco: {
+        nomeCompleto: "Admin",
+        rua: "Rua Admin",
+        numero: "1",
+        complemento: "Admin",
+        bairro: "Admin",
+        cidade: "Admin City",
         uf: "SP",
         cep: "12345-678",
     },
-    "(99) 9999-9999"
-);
+    telefone: "(88) 8888-8888"
+};
 
-usuarios = [usuario1];
+function loginDefaultUser() {
+    const defaultUser = usuarios[0];
 
-usuarios.forEach(usuario => {
-    console.log("Email:", usuario.email);
-    console.log("Senha:", usuario.senha);
-    console.log("Endereço:", usuario.endereco);
-    console.log("Telefone:", usuario.telefone);
-    console.log("UF:", usuario.endereco.uf);
-    console.log();
-});
+    if (defaultUser) {
+        user_logado = true;
+        localStorage.setItem('user_logado', JSON.stringify({ email: defaultUser.email }));
+        alert('Login automático bem-sucedido!');
+        window.location.href = 'store.html';
+    } else {
+        alert('Usuário padrão não encontrado. Faça o cadastro ou tente novamente.');
+    }
+}

@@ -318,3 +318,63 @@ body {
     color: var(--main-color-dark);
     background-color: var(--main-color-bright);
 }
+
+.receipt-container {
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.item-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: small;
+    font-weight: lighter;
+    font-family: 'Poppins', sans-serif;
+}
+
+.item-list li {
+    margin-bottom: 10px;
+}
+
+.item-name {
+    font-size: large;
+    font-weight: bolder;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 5px;
+    color: var(--main-color-medium)
+}
+.item-inf {
+    font-size: small;
+    font-weight: normal;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 5px;
+}
+
+.total {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.user-info,
+.address-info {
+    margin-top: 20px;
+    font-size: small;
+    font-weight: lighter;
+    font-family: 'Poppins', sans-serif;
+}
+
+h3 {
+    margin-bottom: 5px;
+    color: var(--main-color-dark);
+}
+
+.thank-you {
+    font-style: italic;
+    margin-top: 10px;
+    color: var(--main-color-medium);
+}

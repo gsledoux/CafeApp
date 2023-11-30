@@ -4,26 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/styles.css">
+    <style type="text/css" media="print">
+        @page {
+            size: auto;
+            margin: 5mm;
+        }
+
+        body {
+            font-size: 12pt;
+        }
+
+        .receipt-container {
+            /* Adicione estilos específicos para o conteúdo do recibo */
+        }
+
+        /* Adicione mais estilos conforme necessário para outros elementos na impressão */
+    </style>
     <script src="js/script.js" defer></script>
-    <title>Pedido - CafeApp</title>
+    <title>CafeGourmet - Pedido</title>
 </head>
 
 <body>
     <div class="container">
         <div class="phone">
             <div class="pedido-form">
-                <h1 class="cafe-app-title">CafeApp - Pedido</h1>
+                <h1 class="cafe-app-title">CafeGourmet - Pedido</h1>
                 <div class="scrollable-section" id="pedido-section">
                     <!-- Recibo será preenchido dinamicamente pelo script.js -->
                 </div>
                 <div class="buttons">
-                    <button class="button" onclick="printOrder()">Imprimir</button>
+                    <button class="button" onclick="printOrder()">Recibo</button>
+                    <button class="back-button" onclick="printReceipt()">Imprimir</button>
                     <button class="back-button" onclick="voltarAoStore()">Voltar</button>
-                    <button class="back-button" onclick="goBack()">Sair</button>
+                    <button class="back-button" onclick="logout()">Sair</button>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        window.addEventListener('load', function () {
+            const items = JSON.parse(localStorage.getItem('itemsComprados')) || [];
+            const user = JSON.parse(localStorage.getItem('usuarioCompra')) || null;
+
+            if (items.length > 0 && user) {
+            } else {
+                alert('Não há itens no carrinho ou usuário não especificado.');
+            }
+        });
+    </script>
 </body>
 
 </html>
