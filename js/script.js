@@ -358,17 +358,17 @@ const cliente = new UserData(
 );
 
 const admin = {
-    email: "admin@example.com",
+    email: "admin@admin.com",
     senha: "admin",
     endereco: {
-        nomeCompleto: "Admin",
-        rua: "Rua Admin",
-        numero: "1",
-        complemento: "Admin",
-        bairro: "Admin",
-        cidade: "Admin City",
-        uf: "SP",
-        cep: "12345-678",
+        nomeCompleto: "Administrador da Matrix",
+        rua: "Principalmente Administrada",
+        numero: "200",
+        complemento: "Sala 404",
+        bairro: "Centro",
+        cidade: "Cidade Administrativa",
+        uf: "AD",
+        cep: "00000-000",
     },
     telefone: "(88) 8888-8888"
 };
