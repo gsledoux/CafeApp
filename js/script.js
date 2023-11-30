@@ -362,7 +362,7 @@ const admin = {
     senha: "admin",
     endereco: {
         nomeCompleto: "Administrador da Matrix",
-        rua: "Principalmente Administrada",
+        rua: "Bem Administrada",
         numero: "200",
         complemento: "Sala 404",
         bairro: "Centro",
